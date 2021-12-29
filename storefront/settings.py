@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,8 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'playground',
     'debug_toolbar',
+    'djoser',
     'store',
-    'store_custom',
+    'core',
     'tags',
     'likes'
 ]
@@ -93,8 +95,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront2',
         'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'MyPassword'
+        'USER': 'username',
+        'PASSWORD': 'password'
     }
 }
 
@@ -143,5 +145,23 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'COERCE_DECIMAL_TO_STRING': False
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+AUTH_USER_MODEL = 'core.User'
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'core.serializers.CreateUserSerializer',
+        'current_user': 'core.serializers.UserSerializer'
+    }
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'AUTH_HEADER_TYPES': ('JWT',),
+}
+
+#    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMDYwNjQyLCJqdGkiOiI0MTk0ZDU4YzU3OTc0MTNlOTdjZmVjMGMzYTRkMjRkNSIsInVzZXJfaWQiOjN9.S_vsaMTiJhbBpX5-pqzQw9yUsPn4MSlqzf_AuyjnzE4
